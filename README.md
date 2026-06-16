@@ -5,25 +5,25 @@ An AI-powered network security evaluation agent built with **n8n** and **Google 
 ## What It Does
 
 1. **Collects input** through a clean web form: Problem, Analysis, and an optional Solution.
-2. **Guardrail check** — if the input isn't related to network security, the agent instantly refuses with a clear message instead of attempting to answer.
+2. **Guardrail check**  if the input isn't related to network security, the agent instantly refuses with a clear message instead of attempting to answer.
 3. **Evaluates the submission** and returns:
-   - **What You Got Right** — praises accurate parts of the analysis
-   - **What You Missed** — surfaces overlooked risks or gaps
-   - **Best Appropriate Solution** — exactly 4 ranked fixes, labeled `[BEST FIX]` → `[SECONDARY FIX]` → `[DEFENSE-IN-DEPTH]` → `[ONGOING HYGIENE]`
-   - **Expert Tip** — a sharp, practical insight to deepen the user's thinking
-4. **Follow-up chat** — users can continue chatting with the agent afterward, and it remembers the original submission via session-based memory.
+   - **What You Got Right**  praises accurate parts of the analysis
+   - **What You Missed**  surfaces overlooked risks or gaps
+   - **Best Appropriate Solution**  exactly 4 ranked fixes, labeled `[BEST FIX]` → `[SECONDARY FIX]` → `[DEFENSE-IN-DEPTH]` → `[ONGOING HYGIENE]`
+   - **Expert Tip**  a sharp, practical insight to deepen the user's thinking
+4. **Follow-up chat**  users can continue chatting with the agent afterward, and it remembers the original submission via session-based memory.
 5. A **"Submit Another Problem"** button lets users restart instantly without navigating back to the original URL.
 
 ## Tech Stack
 
-- **n8n** — workflow orchestration and AI agent framework
-- **Google Gemini 2.5 Flash-Lite** — language model powering the evaluation
-- **n8n Window Buffer Memory** — session-based conversational memory
-- **Custom CSS** — styled form, scorecard, and button for a polished UI
+- **n8n**  workflow orchestration and AI agent framework
+- **Google Gemini 2.5 Flash-Lite**  language model powering the evaluation
+- **n8n Window Buffer Memory**  session-based conversational memory
+- **Custom CSS**  styled form, scorecard, and button for a polished UI
 
 ## What's in This Repo
 
-- `CyberSentry AI Agent.json` — the full exported n8n workflow (nodes, system prompt, field mappings, and CSS styling)
+- `CyberSentry AI Agent.json`  the full exported n8n workflow (nodes, system prompt, field mappings, and CSS styling)
 
 ## How to Run It
 
