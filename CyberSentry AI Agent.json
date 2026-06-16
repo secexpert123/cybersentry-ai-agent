@@ -1,0 +1,236 @@
+{
+  "name": "CyberSentry AI Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "CyberSentry AI  Network Security Support Agent",
+        "formDescription": "Welcome to CyberSentry AI, your network security support agent. Describe a problem, share your analysis, and (optionally) propose a fix I'll evaluate your input and give you a clear scorecard with practical recommendations.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Describe the network security problem",
+              "fieldType": "textarea",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "What do you think went wrong (your analysis)",
+              "fieldType": "textarea",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Your proposed fix (solution)",
+              "fieldType": "textarea"
+            }
+          ]
+        },
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        416,
+        80
+      ],
+      "id": "0d0f84cb-09ce-4797-a84f-418900481eff",
+      "name": "Problem Submission Form",
+      "webhookId": "ab2557ac-3202-4edb-8fda-6e6fddd7037c"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "assign-1",
+              "name": "combinedPrompt",
+              "type": "string",
+              "value": "=Problem: {{ $json['Describe the network security problem'] }}\nAnalysis: {{ $json['What do you think went wrong (your analysis)'] }}\nSolution: {{ $json['Your proposed fix (solution)'] }}"
+            },
+            {
+              "id": "assign-2",
+              "name": "sessionId",
+              "type": "string",
+              "value": "={{ $execution.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        656,
+        80
+      ],
+      "id": "c674333c-b172-4c11-81dc-1139b5de9d2c",
+      "name": "Combine Inputs"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        416,
+        400
+      ],
+      "id": "887d67fb-daa0-48e6-9277-248f6805c2d2",
+      "name": "Follow-up Chat Trigger",
+      "webhookId": "netguard-followup-chat"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash-lite",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        864,
+        464
+      ],
+      "id": "37904c67-e2af-4e80-825a-ca95fd2cd7fa",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "C35nXd36Kv522Hx2",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId || $('Follow-up Chat Trigger').first().json.sessionId }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1024,
+        464
+      ],
+      "id": "27f97844-9d5b-44e1-9bab-b7b04dbe0b1b",
+      "name": "Window Buffer Memory"
+    },
+    {
+      "parameters": {
+        "operation": "completion",
+        "completionTitle": "CyberSentry AI Evaluation",
+        "completionMessage": "={{ $json.output }}\n\n---\n\n<a href=\"https://amy-learning-agent.app.n8n.cloud/form/ab2557ac-3202-4edb-8fda-6e6fddd7037c\">🔄 Submit Another Problem</a>",
+        "options": {
+          "customCss": ":root {\n\t--font-family: 'Open Sans', sans-serif;\n\t--font-weight-normal: 400;\n\t--font-weight-bold: 600;\n\t--font-size-body: 12px;\n\t--font-size-label: 14px;\n\t--font-size-test-notice: 12px;\n\t--font-size-input: 14px;\n\t--font-size-header: 20px;\n\t--font-size-paragraph: 14px;\n\t--font-size-link: 12px;\n\t--font-size-error: 12px;\n\t--font-size-html-h1: 28px;\n\t--font-size-html-h2: 20px;\n\t--font-size-html-h3: 16px;\n\t--font-size-html-h4: 14px;\n\t--font-size-html-h5: 12px;\n\t--font-size-html-h6: 10px;\n\t--font-size-subheader: 14px;\n\n\t/* Colors */\n\t--color-background: #fbfcfe;\n\t--color-test-notice-text: #e6a23d;\n\t--color-test-notice-bg: #fefaf6;\n\t--color-test-notice-border: #f6dcb7;\n\t--color-card-bg: #ffffff;\n\t--color-card-border: #dbdfe7;\n\t--color-card-shadow: rgba(99, 77, 255, 0.06);\n\t--color-link: #7e8186;\n\t--color-header: #525356;\n\t--color-label: #555555;\n\t--color-input-border: #dbdfe7;\n\t--color-input-text: #71747A;\n\t--color-focus-border: rgb(90, 76, 194);\n\t--color-submit-btn-bg: #ff6d5a;\n\t--color-submit-btn-text: #ffffff;\n\t--color-error: #ea1f30;\n\t--color-required: #ff6d5a;\n\t--color-clear-button-bg: #7e8186;\n\t--color-html-text: #555;\n\t--color-html-link: #ff6d5a;\n\t--color-header-subtext: #7e8186;\n\n\t/* Border Radii */\n\t--border-radius-card: 8px;\n\t--border-radius-input: 6px;\n\t--border-radius-clear-btn: 50%;\n\t--card-border-radius: 8px;\n\n\t/* Spacing */\n\t--padding-container-top: 24px;\n\t--padding-card: 24px;\n\t--padding-test-notice-vertical: 12px;\n\t--padding-test-notice-horizontal: 24px;\n\t--margin-bottom-card: 16px;\n\t--padding-form-input: 12px;\n\t--card-padding: 24px;\n\t--card-margin-bottom: 16px;\n\n\t/* Dimensions */\n\t--container-width: 448px;\n\t--submit-btn-height: 48px;\n\t--checkbox-size: 18px;\n\n\t/* Others */\n\t--box-shadow-card: 0px 4px 16px 0px var(--color-card-shadow);\n\t--opacity-placeholder: 0.5;\n}\n\n.card {\n  text-align: left !important;\n}\n\n.card h2 {\n  color: #1a1a1a;\n  font-weight: 700;\n  border-bottom: 2px solid #ff6d5a;\n  padding-bottom: 6px;\n  margin-top: 24px;\n}\n\n.card strong {\n  color: #000000;\n}\n\n.card ul, .card ol {\n  text-align: left;\n  padding-left: 24px;\n}\n\n.card li {\n  margin-bottom: 8px;\n  line-height: 1.5;\n}\n\n.card p {\n  margin-bottom: 16px;\n  line-height: 1.6;\n}\n\n.card h2 {\n  margin-top: 28px;\n  margin-bottom: 12px;\n}\n\n.card h2:first-of-type {\n  margin-top: 0;\n}\n\n.card a {\n  display: inline-block;\n  padding: 12px 24px;\n  background-color: #ff6d5a;\n  color: #ffffff !important;\n  text-decoration: none;\n  border-radius: 6px;\n  font-weight: 600;\n  margin-top: 16px;\n}\n\n.card a:hover {\n  background-color: #e85a47;\n}"
+        }
+      },
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 2.5,
+      "position": [
+        1248,
+        240
+      ],
+      "id": "cec74ca6-d5da-416b-b855-d63da2981ae7",
+      "name": "Form",
+      "webhookId": "89443cd7-c9dc-4dc3-8d97-513a4d8fee54"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.combinedPrompt || $json.chatInput }}",
+        "options": {
+          "systemMessage": "You are CyberSentry AI, an agent built exclusively to solve and evaluate network security problems (hacks, crashes, firewall issues, misconfigurations, breaches, etc.).\n\n═══════════════════════════════\nGUARDRAIL (CHECK THIS FIRST)\n═══════════════════════════════\nIf the user's input is NOT about network security, respond ONLY with this exact line and nothing else:\n\"I am CyberSentry AI, built exclusively as a network security solver. I cannot help with that topic.\"\n\n═══════════════════════════════\nIF THE INPUT IS NETWORK-SECURITY RELATED\n═══════════════════════════════\nProduce a scorecard with these exact sections, in this exact order. Format strictly in Markdown. Use \"- \" (hyphen + space) for every bullet point, never \"*\". Leave one blank line after every heading and between every bullet/numbered item, so each renders as a separate paragraph or list item.\n\n## What You Got Right\nA bullet list praising the accurate parts of the user's problem analysis and/or proposed solution. Be specific about what they correctly identified.\n\n## What You Missed\nA bullet list exposing architectural gaps, overlooked risks, or security flaws in their analysis or solution.\n\n## Best Appropriate Solution\nList exactly 4 items, each starting with a bold priority label followed by the recommendation. Use this exact format for each line, with a blank line between each:\n\n1. **[BEST FIX]** — the single fix that most directly closes the root-cause vulnerability described in the problem.\n\n2. **[SECONDARY FIX]** — a related but lower-severity gap this also closes.\n\n3. **[DEFENSE-IN-DEPTH]** — a measure that limits damage if #1 and #2 fail or are bypassed.\n\n4. **[ONGOING HYGIENE]** — a general best-practice/maintenance recommendation.\n\nEach item must clearly state what the recommendation IS and why it has that priority level, so the user immediately understands which fix matters most.\n\n## Expert Tip\nOne sharp, thought-provoking insight or follow-up question a senior security expert would raise to make sure this person has fully thought through the problem under real-world pressure — framed as practical guidance for solving the issue, not as a job interview question.\n\n═══════════════════════════════\nHANDLING A MISSING SOLUTION\n═══════════════════════════════\nIf the user did not provide a proposed solution (the Solution field is empty or blank), write \"Best Appropriate Solution\" entirely as recommendations for what they SHOULD do, based on the problem and analysis. Do not critique a solution that wasn't given, and do not mention that it was missing.\n\n═══════════════════════════════\nAFTER THE SCORECARD\n═══════════════════════════════\nOnce the scorecard has been printed, continue the conversation normally. Remember the user's original problem, analysis, and solution (if given), and defend, expand on, or revise the scorecard as the user pushes back or asks follow-up questions."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        896,
+        240
+      ],
+      "id": "e4141544-c817-484e-9f86-c12b45101170",
+      "name": "CyberSentry AI Agent"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Problem Submission Form": {
+      "main": [
+        [
+          {
+            "node": "Combine Inputs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combine Inputs": {
+      "main": [
+        [
+          {
+            "node": "CyberSentry AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Follow-up Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "CyberSentry AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "CyberSentry AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "CyberSentry AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CyberSentry AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Form",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "8458a619-bf0a-4c3c-90c1-22f2800da165",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e649f5c5a7d7a47781982f373059dc3577c9904708737af58104ebe8f7826988"
+  },
+  "nodeGroups": [],
+  "id": "vxPn5fLPzlLWY2C2",
+  "tags": []
+}
