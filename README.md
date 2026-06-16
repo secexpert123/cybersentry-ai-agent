@@ -1,6 +1,6 @@
 # CyberSentry AI Agent
 
-An AI-powered network security evaluation agent built with **n8n** and **Google Gemini**. It acts as a virtual security expert — taking in a network security problem, the user's analysis, and (optionally) their proposed fix, then returning a structured, prioritized scorecard.
+An AI-powered network security evaluation agent built with **n8n** and **Google Gemini**. It acts as a virtual security expert taking in a network security problem, the user's analysis, and (optionally) their proposed fix, then returning a structured, prioritized scorecard.
 
 ## What It Does
 
@@ -39,4 +39,4 @@ An AI-powered network security evaluation agent built with **n8n** and **Google 
 
 ## Why I Built This
 
-This project was built to explore AI-agent orchestration — designing guardrails, structured prompt engineering, and a full end-to-end UX (input → AI evaluation → styled output → conversational follow-up) using a visual, low-code pipeline rather than hand-coded routing logic.
+This project was built to explore AI-agent orchestration designing guardrails, structured prompt engineering, and a full end-to-end UX (input → AI evaluation → styled output → conversational follow-up) using a visual, low-code pipeline rather than hand-coded routing logic.
